@@ -18,40 +18,45 @@
 // Top menu
 var vboxTopMenuBar = new vboxMenuBar({name: 'vboxTop', language_context: 'UIActionPool'});
 
+var fileMenu = [
+    {
+		'name':'fileVMM',
+		'label':'Virtual Media Manager...',
+		'icon':'diskimage',
+		'click':function(){vboxVMMDialog();}
+    }
+];
+
+if(vboxHasPermission('create_vm')) {
+	fileMenu[fileMenu.length] = {
+		'name':'fileImport',
+		'label':'Import Appliance...',
+		'icon':'import',
+		'click':function(){
+			new vboxWizardImportApplianceDialog().run();
+		},
+		'separator': true
+	};
+	fileMenu[fileMenu.length] = {
+		'name':'fileExport',
+		'label':'Export Appliance...',
+		'icon':'export',
+		'click':function(){new vboxWizardExportApplianceDialog().run();}
+	};
+}
+
+fileMenu[fileMenu.length] = {
+	'name':'filePrefs',
+	'label':'Preferences...',
+	'icon':'global_settings',
+	'click':function(){vboxGlobalPrefsDialog();},
+	'separator':true
+};
+
 var menu = {
 	'name':'vboxTopFile',
 	'label': 'File',
-	'menu':[
-        {
-			'name':'fileVMM',
-			'label':'Virtual Media Manager...',
-			'icon':'diskimage',
-			'click':function(){vboxVMMDialog();}
-        },
-        {
-			'name':'fileImport',
-			'label':'Import Appliance...',
-			'icon':'import',
-			'click':function(){
-				
-				new vboxWizardImportApplianceDialog().run();
-			},
-			'separator': true
-        },
-        {
-			'name':'fileExport',
-			'label':'Export Appliance...',
-			'icon':'export',
-			'click':function(){new vboxWizardExportApplianceDialog().run();}
-        },
-        {
-			'name':'filePrefs',
-			'label':'Preferences...',
-			'icon':'global_settings',
-			'click':function(){vboxGlobalPrefsDialog();},
-			'separator':true
-        }
-	]
+	'menu': fileMenu
 };
 
 if($('#vboxPane').data('vboxSession').user) {
@@ -175,49 +180,55 @@ for(var i = 0; i < vboxVMActions.stop_actions.length; i++) {
 }
 
 
+var machineMenu = [];
+if(vboxHasPermission('create_vm')) {
+	machineMenu.push(vboxVMActions['new']);
+	machineMenu.push(vboxVMActions['add']);
+}
+machineMenu.push(vboxVMActions['settings']);
+machineMenu.push(vboxVMActions['clone']);
+machineMenu.push(vboxVMActions['remove']);
+machineMenu.push(vboxVMActions['group']);
+machineMenu.push($.extend({},vboxVMActions['start'],{'separator':true}));
+machineMenu.push(vboxVMActions['pause']);
+machineMenu.push(vboxVMActions['reset']);
+machineMenu.push($.extend({},vboxVMActions['stop'],{'children':sChildren}));
+machineMenu.push($.extend({},vboxVMActions['discard'],{'separator':true}));
+machineMenu.push(vboxVMActions['logs']);
+machineMenu.push(vboxVMActions['refresh']);
+
 vboxTopMenuBar.addMenu({
 	'name': 'vboxTopMachine',
 	'label': 'Machine',
 	'enabled' : function(chooser) {
 		return (!chooser || (chooser.selectionMode != vboxSelectionModeSingleGroup));
 	},
-	'menu':[
-	    vboxVMActions['new'],
-	    vboxVMActions['add'],
-	    vboxVMActions['settings'],
-	    vboxVMActions['clone'],
-	    vboxVMActions['remove'],
-	    vboxVMActions['group'],
-	    $.extend({},vboxVMActions['start'],{'separator':true}),
-	    vboxVMActions['pause'],
-	    vboxVMActions['reset'],
-	    $.extend({},vboxVMActions['stop'],{'children':sChildren}),
-	    $.extend({},vboxVMActions['discard'],{'separator':true}),
-	    vboxVMActions['logs'],
-	    vboxVMActions['refresh'],
-	]
+	'menu': machineMenu
 });
 
 		
+var groupMenu = [];
+if(vboxHasPermission('create_vm')) {
+	groupMenu.push(vboxVMGroupActions['newmachine']);
+	groupMenu.push(vboxVMGroupActions['addmachine']);
+}
+groupMenu.push($.extend({}, vboxVMGroupActions['rename'], {separator:true}));
+groupMenu.push(vboxVMGroupActions['ungroup']);
+groupMenu.push($.extend({},vboxVMActions['start'],{'name':'start','separator' : true}));
+groupMenu.push(vboxVMActions['pause']);
+groupMenu.push(vboxVMActions['reset']);
+groupMenu.push($.extend({},vboxVMActions['stop'],{'children':sChildren}));
+groupMenu.push($.extend({},vboxVMActions['discard'],{'separator' : true}));
+groupMenu.push(vboxVMActions['refresh']);
+groupMenu.push($.extend({}, vboxVMGroupActions['sort'], {separator:true}));
+
 vboxTopMenuBar.addMenu({
 	'name':'vboxTopGroup',
 	'label':'Group',
 	'enabled' : function(chooser) {
 		return (chooser && (chooser.selectionMode == vboxSelectionModeSingleGroup));
 	},
-	'menu':[
-    	vboxVMGroupActions['newmachine'],
-    	vboxVMGroupActions['addmachine'],
-    	$.extend({}, vboxVMGroupActions['rename'], {separator:true}),
-    	vboxVMGroupActions['ungroup'],
-    	$.extend({},vboxVMActions['start'],{'name':'start','separator' : true}),
-        vboxVMActions['pause'],
-        vboxVMActions['reset'],
-    	$.extend({},vboxVMActions['stop'],{'children':sChildren}),
-    	$.extend({},vboxVMActions['discard'],{'separator' : true}),
-    	vboxVMActions['refresh'],
-    	$.extend({}, vboxVMGroupActions['sort'], {separator:true})
-	]
+	'menu': groupMenu
 });
 
 vboxTopMenuBar.addMenu({

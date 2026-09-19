@@ -180,6 +180,30 @@
 			<translation>Poate administra utilizatorii</translation>
 		</message>
 		<message>
+			<source>VM Permissions</source>
+			<translation>Permisiuni VM</translation>
+		</message>
+		<message>
+			<source>Start virtual machines</source>
+			<translation>Pornire mașini virtuale</translation>
+		</message>
+		<message>
+			<source>Stop virtual machines</source>
+			<translation>Oprire mașini virtuale</translation>
+		</message>
+		<message>
+			<source>Create virtual machines</source>
+			<translation>Creare mașini virtuale</translation>
+		</message>
+		<message>
+			<source>Delete virtual machines</source>
+			<translation>Ștergere mașini virtuale</translation>
+		</message>
+		<message>
+			<source>Edit virtual machines</source>
+			<translation>Editare mașini virtuale</translation>
+		</message>
+		<message>
 			<source>Add User</source>
 			<translation>Adauga utilizator</translation>
 		</message>

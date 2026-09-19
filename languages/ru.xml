@@ -180,6 +180,30 @@
 			<translation>Может управлять пользователями</translation>
 		</message>
 		<message>
+			<source>VM Permissions</source>
+			<translation>Разрешения VM</translation>
+		</message>
+		<message>
+			<source>Start virtual machines</source>
+			<translation>Запуск виртуальных машин</translation>
+		</message>
+		<message>
+			<source>Stop virtual machines</source>
+			<translation>Остановка виртуальных машин</translation>
+		</message>
+		<message>
+			<source>Create virtual machines</source>
+			<translation>Создание виртуальных машин</translation>
+		</message>
+		<message>
+			<source>Delete virtual machines</source>
+			<translation>Удаление виртуальных машин</translation>
+		</message>
+		<message>
+			<source>Edit virtual machines</source>
+			<translation>Редактирование виртуальных машин</translation>
+		</message>
+		<message>
 			<source>Add User</source>
 			<translation>Добавить пользователя</translation>
 		</message>

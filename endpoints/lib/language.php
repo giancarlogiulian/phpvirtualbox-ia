@@ -55,11 +55,12 @@ class __vbox_language {
 			$lang = str_replace(array('/','\\','.'),'',$_COOKIE['vboxLanguage']);
 		}
 
-		// File as specified
-		if($lang && file_exists(VBOX_BASE_LANG_DIR.'/source/'.$lang.'.dat')) {
-			@define('VBOXLANG', $lang);
+		$sourceDat = VBOX_BASE_LANG_DIR.'/source/'.$lang.'.dat';
+		$xmlPath = VBOX_BASE_LANG_DIR.'/'.$lang.'.xml';
 
-		// No lang file found
+		// If the XML language file exists, keep the requested locale even if the generated .dat cache is missing or corrupt.
+		if($lang && file_exists($xmlPath)) {
+			@define('VBOXLANG', $lang);
 		} else {
 			$lang = 'en';
 			@define('VBOXLANG', $lang);
@@ -67,10 +68,19 @@ class __vbox_language {
 			return;
 		}
 
+		self::$langdata = array();
 
-		self::$langdata = unserialize(@file_get_contents(VBOX_BASE_LANG_DIR.'/source/'.$lang.'.dat'));
+		if(file_exists($sourceDat)) {
+			$serialized = @file_get_contents($sourceDat);
+			if($serialized !== false) {
+				$decoded = @unserialize($serialized);
+				if(is_array($decoded)) {
+					self::$langdata = $decoded;
+				}
+			}
+		}
 
-		$xmlObj = simplexml_load_string(@file_get_contents(VBOX_BASE_LANG_DIR.'/'.$lang.'.xml'));
+		$xmlObj = simplexml_load_file($xmlPath);
 		$arrXml = $this->objectsIntoArray($xmlObj);
 
 		if(!array_key_exists('context',$arrXml)) return;

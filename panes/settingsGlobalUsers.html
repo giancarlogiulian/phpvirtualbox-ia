@@ -55,6 +55,13 @@ var sButtons = new Array(
 					var p1 = $('#vboxUserEdit').find('input[name=npass1]').first().val();
 					var p2 = $('#vboxUserEdit').find('input[name=npass2]').first().val();
 					var a = $('#vboxUserEdit').find('input[name=admin]').first().prop('checked');
+					var permissions = {
+						'start_vm': $('#vboxUserEdit').find('input[name=perm_start_vm]').first().prop('checked'),
+						'stop_vm': $('#vboxUserEdit').find('input[name=perm_stop_vm]').first().prop('checked'),
+						'create_vm': $('#vboxUserEdit').find('input[name=perm_create_vm]').first().prop('checked'),
+						'delete_vm': $('#vboxUserEdit').find('input[name=perm_delete_vm]').first().prop('checked'),
+						'edit_vm': $('#vboxUserEdit').find('input[name=perm_edit_vm]').first().prop('checked')
+					};
 					if(u.length == 0) {
 						$(this).remove();
 						return;
@@ -68,7 +75,7 @@ var sButtons = new Array(
 					chp.add('addUser',function(d){
 						if(d) {
 							if(d.success) {
-								vboxSettingsGlobalAddUserList({'username':u,'admin':a});
+								vboxSettingsGlobalAddUserList({'username':u,'admin':a,'permissions': permissions});
 								$(dialog).remove();
 							} else {
 								vboxAlert(trans('A user with that username already exists.','UIUsers'),{'width':'auto'});
@@ -77,7 +84,7 @@ var sButtons = new Array(
 							// unknown error
 							$(dialog).remove();
 						}
-					},{'u':u,'p':p1,'a':a});
+					},{'u':u,'p':p1,'a':a,'permissions': permissions});
 					chp.run();
 				};
 				buttons[trans('Cancel','QIMessageBox')] = function(){
@@ -186,6 +193,11 @@ var sButtons = new Array(
 				var user = $('#vboxSettingsUserList').children('li.vboxListItemSelected').data();
 				$('#vboxEditUserUsername').html(user.username);
 				$('#vboxUserEdit').find('input[name=admin]').first().prop('checked', (user.admin ? true : false));
+				$('#vboxUserEdit').find('input[name=perm_start_vm]').first().prop('checked', !!(user.permissions && user.permissions.start_vm));
+				$('#vboxUserEdit').find('input[name=perm_stop_vm]').first().prop('checked', !!(user.permissions && user.permissions.stop_vm));
+				$('#vboxUserEdit').find('input[name=perm_create_vm]').first().prop('checked', !!(user.permissions && user.permissions.create_vm));
+				$('#vboxUserEdit').find('input[name=perm_delete_vm]').first().prop('checked', !!(user.permissions && user.permissions.delete_vm));
+				$('#vboxUserEdit').find('input[name=perm_edit_vm]').first().prop('checked', !!(user.permissions && user.permissions.edit_vm));
 				
 				var buttons = {};
 				buttons[trans('OK','QIMessageBox')] = function() {
@@ -193,6 +205,13 @@ var sButtons = new Array(
 					var p1 = $('#vboxUserEdit').find('input[name=npass1]').first().val();
 					var p2 = $('#vboxUserEdit').find('input[name=npass2]').first().val();
 					var a = $('#vboxUserEdit').find('input[name=admin]').first().prop('checked');
+					var permissions = {
+						'start_vm': $('#vboxUserEdit').find('input[name=perm_start_vm]').first().prop('checked'),
+						'stop_vm': $('#vboxUserEdit').find('input[name=perm_stop_vm]').first().prop('checked'),
+						'create_vm': $('#vboxUserEdit').find('input[name=perm_create_vm]').first().prop('checked'),
+						'delete_vm': $('#vboxUserEdit').find('input[name=perm_delete_vm]').first().prop('checked'),
+						'edit_vm': $('#vboxUserEdit').find('input[name=perm_edit_vm]').first().prop('checked')
+					};
 					
 					if(p1.length > 0 && (p1 != p2)) {
 						vboxAlert(trans('The passwords you have entered do not match.','UIUsers'),{'width':'auto'});
@@ -202,13 +221,13 @@ var sButtons = new Array(
 					var chp = new vboxLoader();
 					chp.add('editUser',function(d){
 						if(d && d.success) {
-							$('#vboxSettingsUserList').children('li.vboxListItemSelected').data({'admin':a}).html(user.username + (a ? ' ('+trans('Admin User','UIUsers')+')' : ''));
+							$('#vboxSettingsUserList').children('li.vboxListItemSelected').data({'admin':a,'permissions': permissions}).html(user.username + (a ? ' ('+trans('Admin User','UIUsers')+')' : ''));
 							$(dialog).remove();
 						} else {
 							// unknown error
 							$(dialog).remove();
 						}
-					},{'u':user.username,'p':p1,'a':a});
+					},{'u':user.username,'p':p1,'a':a,'permissions': permissions});
 					chp.run();
 				};
 				buttons[trans('Cancel','QIMessageBox')] = function(){

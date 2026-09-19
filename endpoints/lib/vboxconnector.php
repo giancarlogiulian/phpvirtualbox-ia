@@ -149,6 +149,16 @@ class vboxconnector {
 
 	}
 
+	private function _hasPermission($permission) {
+		if(!empty($_SESSION['admin'])) {
+			return true;
+		}
+		if(!isset($_SESSION['permissions']) || !is_array($_SESSION['permissions'])) {
+			return true;
+		}
+		return !empty($_SESSION['permissions'][$permission]);
+	}
+
 	/**
 	 * Connect to vboxwebsrv
 	 * @see SoapClient
@@ -3267,6 +3277,21 @@ class vboxconnector {
 		$machine = $this->vbox->findMachine($vm);
 		$mstate = (string)$machine->state;
 
+		$statePermissions = array(
+			'powerUp' => 'start_vm',
+			'resume' => 'start_vm',
+			'powerDown' => 'stop_vm',
+			'saveState' => 'stop_vm',
+			'powerButton' => 'stop_vm',
+			'sleepButton' => 'stop_vm',
+			'pause' => 'stop_vm',
+			'reset' => 'stop_vm',
+			'discardSavedState' => 'stop_vm'
+		);
+		if(isset($statePermissions[$state]) && !$this->_hasPermission($statePermissions[$state])) {
+			throw new Exception('Not authorized to change this VM state');
+		}
+
 		if (@$this->settings->enforceVMOwnership && !$this->skipSessionCheck && ($owner = $machine->getExtraData("phpvb/sso/owner")) && $owner !== $_SESSION['user'] && !$_SESSION['admin'] )
 		{
 			// skip this VM as it is not owned by the user we're logged in as
@@ -3750,6 +3775,10 @@ class vboxconnector {
 	 */
 	public function remote_machineRemove($args) {
 
+		if(!$this->_hasPermission('delete_vm')) {
+			throw new Exception('Not authorized to delete virtual machines');
+		}
+
 		// Connect to vboxwebsrv
 		$this->connect();
 
@@ -3807,6 +3836,10 @@ class vboxconnector {
 	 * @return boolean true on success
 	 */
 	public function remote_machineCreate($args) {
+
+		if(!$this->_hasPermission('create_vm')) {
+			throw new Exception('Not authorized to create virtual machines');
+		}
 
 		// Connect to vboxwebsrv
 		$this->connect();

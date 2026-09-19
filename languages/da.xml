@@ -180,6 +180,30 @@
 			<translation>Kan administrere brugere</translation>
 		</message>
 		<message>
+			<source>VM Permissions</source>
+			<translation>VM-tilladelser</translation>
+		</message>
+		<message>
+			<source>Start virtual machines</source>
+			<translation>Start virtuelle maskiner</translation>
+		</message>
+		<message>
+			<source>Stop virtual machines</source>
+			<translation>Stop virtuelle maskiner</translation>
+		</message>
+		<message>
+			<source>Create virtual machines</source>
+			<translation>Opret virtuelle maskiner</translation>
+		</message>
+		<message>
+			<source>Delete virtual machines</source>
+			<translation>Slet virtuelle maskiner</translation>
+		</message>
+		<message>
+			<source>Edit virtual machines</source>
+			<translation>Rediger virtuelle maskiner</translation>
+		</message>
+		<message>
 			<source>Add User</source>
 			<translation>Tilføj bruger</translation>
 		</message>

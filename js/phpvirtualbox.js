@@ -1377,6 +1377,13 @@ var vboxVMDetailsSections = {
 	}
 };
 
+function vboxHasPermission(permission) {
+	var session = $('#vboxPane').data('vboxSession') || {};
+	if(session.admin) return true;
+	if(!session.permissions) return true;
+	return !!session.permissions[permission];
+}
+
 /**
  * Common VM Group Actions - most of these are passed off
  * to the vboxChooser object
@@ -1393,7 +1400,7 @@ var vboxVMGroupActions = {
 			vboxVMActions['new'].click(true);
 		},
 		enabled: function() {
-			return $('#vboxPane').data('vboxSession').admin;
+			return vboxHasPermission('create_vm');
 		}
 	},
 	
@@ -1405,7 +1412,7 @@ var vboxVMGroupActions = {
 			vboxVMActions['add'].click(true);
 		},
 		enabled: function() {
-			return $('#vboxPane').data('vboxSession').admin;
+			return vboxHasPermission('create_vm');
 		}
 	},
 	
@@ -1475,17 +1482,25 @@ var vboxVMActions = {
 			label: 'New...',
 			icon: 'vm_new',
 			name: 'new',
+			enabled: function() {
+				return vboxHasPermission('create_vm');
+			},
 			click: function(fromGroup){
+				if(!vboxHasPermission('create_vm')) return;
 				new vboxWizardNewVMDialog((fromGroup ? $(vboxChooser.getSelectedGroupElements()[0]).data('vmGroupPath'): '')).run();
 			}
-	},
+		},
 	
 	/** Add a virtual machine via its settings file */
 	add: {
 		label: 'Add...',
 		icon: 'vm_add',
 		name: 'add',
+		enabled: function() {
+			return vboxHasPermission('create_vm');
+		},
 		click: function(){
+			if(!vboxHasPermission('create_vm')) return;
 			vboxFileBrowser($('#vboxPane').data('vboxSystemProperties').defaultMachineFolder,function(f){
 				if(!f) return;
 				var l = new vboxLoader();
@@ -1791,7 +1806,7 @@ var vboxVMActions = {
 						
 		},
 		enabled: function () {
-			return (vboxChooser.isSelectedInState('Paused') || vboxChooser.isSelectedInState('PoweredOff') || vboxChooser.isSelectedInState('Saved'));			
+			return vboxHasPermission('start_vm') && (vboxChooser.isSelectedInState('Paused') || vboxChooser.isSelectedInState('PoweredOff') || vboxChooser.isSelectedInState('Saved'));			
 		}	
 	},
 	
@@ -1949,7 +1964,7 @@ var vboxVMActions = {
     	
     	},
     	enabled: function () {
-    		if(!vboxChooser._editable) return false;
+			if(!vboxHasPermission('delete_vm')) return false;
     		return (vboxChooser.isSelectedInState('PoweredOff') || vboxChooser.isSelectedInState('Inaccessible'));
     	}
     },
@@ -2011,11 +2026,11 @@ var vboxVMActions = {
 			}
 		},
 		enabled:function(){
-			return vboxChooser.isSelectedInState('Saved');
+			return vboxHasPermission('stop_vm') && vboxChooser.isSelectedInState('Saved');
 		}
-    },
-    
-    /** Install Guest Additions **/
+	},
+	
+	/** Install Guest Additions **/
     guestAdditionsInstall: {
     	label: 'Install Guest Additions...',
     	icon: 'guesttools',
@@ -2109,7 +2124,7 @@ var vboxVMActions = {
 		name: 'save_state',
 		stop_action: true,
 		enabled: function(){
-			return (vboxChooser.isSelectedInState('Running') || vboxChooser.isSelectedInState('Paused'));
+			return vboxHasPermission('stop_vm') && (vboxChooser.isSelectedInState('Running') || vboxChooser.isSelectedInState('Paused'));
 		},
 		click: function() {
 
@@ -2128,7 +2143,7 @@ var vboxVMActions = {
 		name: 'vm_shutdown',
 		stop_action: true,
 		enabled: function(){
-			return vboxChooser.isSelectedInState('Running');
+			return vboxHasPermission('stop_vm') && vboxChooser.isSelectedInState('Running');
 		},
 		click: function() {
 			var buttons = {};
@@ -2164,7 +2179,7 @@ var vboxVMActions = {
 		icon: 'vm_pause',
 		name: 'vm_pause',
 		enabled: function(){
-			return vboxChooser.isSelectedInState('Running');
+			return vboxHasPermission('stop_vm') && vboxChooser.isSelectedInState('Running');
 		},
 		click: function() {
 			var vms = vboxChooser.getSelectedVMsData();
@@ -2182,7 +2197,7 @@ var vboxVMActions = {
 		name: 'poweroff',
 		stop_action: true,
 		enabled: function() {
-			return (vboxChooser.isSelectedInState('Running') || vboxChooser.isSelectedInState('Paused') || vboxChooser.isSelectedInState('Stuck'));
+			return vboxHasPermission('stop_vm') && (vboxChooser.isSelectedInState('Running') || vboxChooser.isSelectedInState('Paused') || vboxChooser.isSelectedInState('Stuck'));
 		},
 		click: function() {
 			
@@ -2223,7 +2238,7 @@ var vboxVMActions = {
 		icon: 'vm_reset',
 		name: 'reset',
 		enabled: function(){
-			return vboxChooser.isSelectedInState('Running');
+			return vboxHasPermission('stop_vm') && vboxChooser.isSelectedInState('Running');
 		},
 		click: function() {
 			var buttons = {};
@@ -2267,7 +2282,7 @@ var vboxVMActions = {
 		menu: true,
 		click: function () { return true; /* handled by stop context menu */ },
 		enabled: function () {
-			return (vboxChooser.isSelectedInState('Running') || vboxChooser.isSelectedInState('Paused') || vboxChooser.isSelectedInState('Stuck'));
+			return vboxHasPermission('stop_vm') && (vboxChooser.isSelectedInState('Running') || vboxChooser.isSelectedInState('Paused') || vboxChooser.isSelectedInState('Stuck'));
 		}
 	},
 	

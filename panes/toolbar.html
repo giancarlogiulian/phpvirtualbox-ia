@@ -12,25 +12,25 @@
  * JS objects for actions that can be performed on a VM
  * from this toolbar
  */
-var tButtons = [
+var tButtons = [];
+if(vboxHasPermission('create_vm')) {
+    tButtons.push(vboxVMActions['new']);
+}
+tButtons.push($.extend({},vboxVMActions['settings'],{click: function(){
+    var vm = vboxChooser.getSingleSelected();
+    if(!vm || vboxVMStates.isRunning(vm) || vboxVMStates.isPaused(vm)) return;
+    vboxVMActions['settings'].click();
     
-    vboxVMActions['new'],
-    $.extend({},vboxVMActions['settings'],{click: function(){
-        var vm = vboxChooser.getSingleSelected();
-        if(!vm || vboxVMStates.isRunning(vm) || vboxVMStates.isPaused(vm)) return;
-        vboxVMActions['settings'].click();
-        
-    }}),
-    vboxVMActions['start'],
-    {
-        name: 'stop',
-        icon: 'vm_poweroff',
-        label: 'Stop',
-        language_context: 'VBoxSelectorWnd',
-        enabled: vboxVMActions['stop'].enabled,
-        click : function() {return;}
-    }
-];
+}}));
+tButtons.push(vboxVMActions['start']);
+tButtons.push({
+    name: 'stop',
+    icon: 'vm_poweroff',
+    label: 'Stop',
+    language_context: 'VBoxSelectorWnd',
+    enabled: vboxVMActions['stop'].enabled,
+    click : function() {return;}
+});
 
 /* Append Top Toolbar */
 var vboxChooserToolbarTop = new vboxToolbar({buttons: tButtons, size: 32,

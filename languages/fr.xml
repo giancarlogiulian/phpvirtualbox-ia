@@ -180,6 +180,30 @@
 			<translation>Peut créer, modifier ou supprimer des utilisateurs</translation>
 		</message>
 		<message>
+			<source>VM Permissions</source>
+			<translation>Autorisations VM</translation>
+		</message>
+		<message>
+			<source>Start virtual machines</source>
+			<translation>Démarrer les machines virtuelles</translation>
+		</message>
+		<message>
+			<source>Stop virtual machines</source>
+			<translation>Arrêter les machines virtuelles</translation>
+		</message>
+		<message>
+			<source>Create virtual machines</source>
+			<translation>Créer des machines virtuelles</translation>
+		</message>
+		<message>
+			<source>Delete virtual machines</source>
+			<translation>Supprimer des machines virtuelles</translation>
+		</message>
+		<message>
+			<source>Edit virtual machines</source>
+			<translation>Modifier les machines virtuelles</translation>
+		</message>
+		<message>
 			<source>Add User</source>
 			<translation>Ajouter un utilisateur</translation>
 		</message>

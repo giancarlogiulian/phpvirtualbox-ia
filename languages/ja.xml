@@ -180,6 +180,30 @@
 			<translation>管理者ユーザにする</translation>
 		</message>
 		<message>
+			<source>VM Permissions</source>
+			<translation>VM 権限</translation>
+		</message>
+		<message>
+			<source>Start virtual machines</source>
+			<translation>仮想マシンを起動</translation>
+		</message>
+		<message>
+			<source>Stop virtual machines</source>
+			<translation>仮想マシンを停止</translation>
+		</message>
+		<message>
+			<source>Create virtual machines</source>
+			<translation>仮想マシンを作成</translation>
+		</message>
+		<message>
+			<source>Delete virtual machines</source>
+			<translation>仮想マシンを削除</translation>
+		</message>
+		<message>
+			<source>Edit virtual machines</source>
+			<translation>仮想マシンを編集</translation>
+		</message>
+		<message>
 			<source>Add User</source>
 			<translation>ユーザの追加</translation>
 		</message>

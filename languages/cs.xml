@@ -180,6 +180,30 @@
 			<translation>Může spravovat účty ostatních uživatelů</translation>
 		</message>
 		<message>
+			<source>VM Permissions</source>
+			<translation>Oprávnění VM</translation>
+		</message>
+		<message>
+			<source>Start virtual machines</source>
+			<translation>Spustit virtuální stroje</translation>
+		</message>
+		<message>
+			<source>Stop virtual machines</source>
+			<translation>Zastavit virtuální stroje</translation>
+		</message>
+		<message>
+			<source>Create virtual machines</source>
+			<translation>Vytvořit virtuální stroje</translation>
+		</message>
+		<message>
+			<source>Delete virtual machines</source>
+			<translation>Odstranit virtuální stroje</translation>
+		</message>
+		<message>
+			<source>Edit virtual machines</source>
+			<translation>Upravit virtuální stroje</translation>
+		</message>
+		<message>
 			<source>Add User</source>
 			<translation>Přidat uživatele</translation>
 		</message>

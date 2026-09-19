@@ -180,6 +180,30 @@
 			<translation>Kan gebruikers aanpassen</translation>
 		</message>
 		<message>
+			<source>VM Permissions</source>
+			<translation>VM-toestemmingen</translation>
+		</message>
+		<message>
+			<source>Start virtual machines</source>
+			<translation>Virtuele machines starten</translation>
+		</message>
+		<message>
+			<source>Stop virtual machines</source>
+			<translation>Virtuele machines stoppen</translation>
+		</message>
+		<message>
+			<source>Create virtual machines</source>
+			<translation>Virtuele machines aanmaken</translation>
+		</message>
+		<message>
+			<source>Delete virtual machines</source>
+			<translation>Virtuele machines verwijderen</translation>
+		</message>
+		<message>
+			<source>Edit virtual machines</source>
+			<translation>Virtuele machines bewerken</translation>
+		</message>
+		<message>
 			<source>Add User</source>
 			<translation>Gebruiker toevoegen</translation>
 		</message>

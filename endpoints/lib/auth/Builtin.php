@@ -29,6 +29,43 @@ class phpvbAuthBuiltin implements phpvbAuth {
 			'canLogout' => true
 		);
 
+	function permissionDefaults()
+	{
+		return array(
+			'start_vm' => true,
+			'stop_vm' => true,
+			'create_vm' => true,
+			'delete_vm' => true,
+			'edit_vm' => true
+		);
+	}
+
+	function normalizePermissions($permissions = array(), $admin = false)
+	{
+		$defaults = $this->permissionDefaults();
+		$permissions = is_array($permissions) ? $permissions : array();
+		foreach($defaults as $key => $value) {
+			$defaults[$key] = ($admin || !empty($permissions[$key]));
+		}
+		return $defaults;
+	}
+
+	function getUserPermissions($username, $admin = false)
+	{
+		$vbox = new vboxconnector(true);
+		$vbox->connect();
+		$raw = $vbox->vbox->getExtraData('phpvb/users/'.$username.'/permissions');
+		$permissions = $raw ? json_decode($raw, true) : array();
+		return $this->normalizePermissions($permissions, $admin);
+	}
+
+	function setUserPermissions($username, $permissions, $admin = false)
+	{
+		$vbox = new vboxconnector(true);
+		$vbox->connect();
+		$vbox->vbox->setExtraData('phpvb/users/'.$username.'/permissions', json_encode($this->normalizePermissions($permissions, $admin)));
+	}
+
 	/**
 	 *
 	 * Log in function. Populates $_SESSION
@@ -49,6 +86,7 @@ class phpvbAuthBuiltin implements phpvbAuth {
 			$vbox->vbox->setExtraData('phpvb/usersSetup','1');
 			$vbox->vbox->setExtraData('phpvb/users/'.$username.'/pass', hash('sha512', 'admin'));
 			$vbox->vbox->setExtraData('phpvb/users/'.$username.'/admin', '1');
+			$vbox->vbox->setExtraData('phpvb/users/'.$username.'/permissions', json_encode($this->permissionDefaults()));
 			$p = hash('sha512', 'admin');
 		}
 
@@ -56,6 +94,7 @@ class phpvbAuthBuiltin implements phpvbAuth {
 			$_SESSION['valid'] = true;
 			$_SESSION['user'] = $username;
 			$_SESSION['admin'] = intval($vbox->vbox->getExtraData('phpvb/users/'.$username.'/admin'));
+			$_SESSION['permissions'] = $this->getUserPermissions($username, !!$_SESSION['admin']);
 			$_SESSION['authCheckHeartbeat'] = time();
 			$_SESSION['uHash'] = $p;
 		}
@@ -111,6 +150,7 @@ class phpvbAuthBuiltin implements phpvbAuth {
 			unset($_SESSION['valid']);
 		} else {
 			$_SESSION['admin'] = intval($vbcheck->vbox->getExtraData('phpvb/users/'.$_SESSION['user'].'/admin'));
+			$_SESSION['permissions'] = $this->getUserPermissions($_SESSION['user'], !!$_SESSION['admin']);
 			$_SESSION['authCheckHeartbeat'] = time();
 		}
 
@@ -150,7 +190,7 @@ class phpvbAuthBuiltin implements phpvbAuth {
 				$user = substr($k,12,strpos($k,'/',13)-12);
 				if(isset($response[$user])) continue;
 				$admin = intval($vbox->vbox->getExtraData('phpvb/users/'.$user.'/admin'));
-				$response[$user] = array('username'=>$user,'admin'=>$admin);
+				$response[$user] = array('username'=>$user,'admin'=>$admin,'permissions'=>$this->getUserPermissions($user, !!$admin));
 			}
 		}
 		return $response;
@@ -181,7 +221,13 @@ class phpvbAuthBuiltin implements phpvbAuth {
 		if($vboxRequest['p'])
 			$vbox->vbox->setExtraData('phpvb/users/'.$vboxRequest['u'].'/pass', hash('sha512', $vboxRequest['p']));
 
-		$vbox->vbox->setExtraData('phpvb/users/'.$vboxRequest['u'].'/admin', ($vboxRequest['a'] ? '1' : '0'));
+		$admin = !empty($vboxRequest['a']);
+		$vbox->vbox->setExtraData('phpvb/users/'.$vboxRequest['u'].'/admin', ($admin ? '1' : '0'));
+		if(isset($vboxRequest['permissions'])) {
+			$this->setUserPermissions($vboxRequest['u'], $vboxRequest['permissions'], $admin);
+		} elseif($admin) {
+			$this->setUserPermissions($vboxRequest['u'], $this->permissionDefaults(), true);
+		}
 	}
 
 	/**
@@ -197,6 +243,7 @@ class phpvbAuthBuiltin implements phpvbAuth {
 
 		$vbox->vbox->setExtraData('phpvb/users/'.$user.'/pass','');
 		$vbox->vbox->setExtraData('phpvb/users/'.$user.'/admin','');
+		$vbox->vbox->setExtraData('phpvb/users/'.$user.'/permissions','');
 		$vbox->vbox->setExtraData('phpvb/users/'.$user,'');
 	}
 }

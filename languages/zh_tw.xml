@@ -180,6 +180,30 @@
 			<translation>可管理使用者</translation>
 		</message>
 		<message>
+			<source>VM Permissions</source>
+			<translation>VM 權限</translation>
+		</message>
+		<message>
+			<source>Start virtual machines</source>
+			<translation>啟動虛擬機器</translation>
+		</message>
+		<message>
+			<source>Stop virtual machines</source>
+			<translation>停止虛擬機器</translation>
+		</message>
+		<message>
+			<source>Create virtual machines</source>
+			<translation>建立虛擬機器</translation>
+		</message>
+		<message>
+			<source>Delete virtual machines</source>
+			<translation>刪除虛擬機器</translation>
+		</message>
+		<message>
+			<source>Edit virtual machines</source>
+			<translation>編輯虛擬機器</translation>
+		</message>
+		<message>
 			<source>Add User</source>
 			<translation>添加使用者</translation>
 		</message>
